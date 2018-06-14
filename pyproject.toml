@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "hazel-db"
+version = "0.1.dev0"
+description = "A library which eases integrating SQLAlchemy into a project"
+authors = ["Abdul-Hakeem Shaibu <hkmshb@gmail.com>"]
+keywords = ["hazel", "sqlalchemy", "database", "db"]
+license = "BSD-2-Clause"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+sqlalchemy = "^1.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.6"
+pytest-cov = "^2.5"
