@@ -1,5 +1,7 @@
+import inspect
+import zope.sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base, instrument_declarative
 from sqlalchemy import create_engine, engine_from_config
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import MetaData
 
@@ -93,3 +95,47 @@ def create_session(factory, tm=None, retry_count=3):
         zope.sqlalchemy.register(dbsession, transaction_manager=tm)
         dbsession.transaction_manager = tm
     return dbsession
+
+
+def attach_model(model_class, BASE, ignore_reattach=True):
+    '''Dynamically adds a model to the specified SQLAlchemy declarative BASE.
+
+    More flexibility is gained by not inheriting from SQLAlchemy declarative
+    base and instead plugging in models during the configuration time.
+
+    Directly inheriting from SQLAlchemy BASE has non-undoable side effects.
+    All models automatically pollute SQLAlchemy namespace and may e.g cause
+    problems with conflicting table names.
+
+    :credit: websauna :: //github.com/websauna/
+    '''
+    if ignore_reattach:
+        if '_decl_class_registry' in model_class.__dict__:
+            assert model_class._decl_class_registry == BASE._decl_class_registry, (
+                "Tried to attach to a different SQLAlchemy declarative BASE")
+            return
+    instrument_declarative(model_class, BASE._decl_class_registry, BASE.metadata)
+
+
+def attach_module_models(module, BASE):
+    '''Attaches all models in a python module to SQLAlchemy declarative BASE.
+    The attachable models must declare ``__tablename__`` property and must not
+    have existing ``Base`` class in their inheritance.
+
+    :credit: websauna :: //github.com/websauna/
+    '''
+    for key in dir(module):
+        value = getattr(module, key)
+        if inspect.isclass(value):
+            # TODO: we can't really check for SQLAlchemy declarative BASE class
+            # as it's usually run-time generated and may be out of our control
+            if any(b.__name__ == 'Base' for b in inspect.getmro(value)):
+                # already inherits from SQLAlchemy declaratifve base
+                continue
+            if hasattr(value, '__tablename__'):
+                try:
+                    attach_model(value, BASE)
+                except Exception:
+                    msg = "Attaching '{}' to SQLAlchemy declarative BASE failed"
+                    log.debug(msg.format(value))
+                    raise

@@ -9,4 +9,5 @@ venv/
 .cache/
 .tmp/
 
+.coverage
 *.log

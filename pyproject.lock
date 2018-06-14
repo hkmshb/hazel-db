@@ -114,10 +114,47 @@ optional = false
 python-versions = "*"
 platform = "*"
 
+[[package]]
+name = "transaction"
+version = "2.2.1"
+description = "Transaction management for Python"
+category = "main"
+optional = false
+python-versions = "*"
+platform = "any"
+
+[package.dependencies]
+"zope.interface" = "*"
+[[package]]
+name = "zope.interface"
+version = "4.5.0"
+description = "Interfaces for Python"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+platform = "*"
+
+[package.dependencies]
+setuptools = "*"
+[[package]]
+name = "zope.sqlalchemy"
+version = "1.0"
+description = "Minimal Zope/SQLAlchemy transaction integration"
+category = "main"
+optional = false
+python-versions = "*"
+platform = "*"
+
+[package.dependencies]
+setuptools = "*"
+SQLAlchemy = ">=0.5.1"
+transaction = ">=1.6.0"
+"zope.interface" = ">=3.6.0"
+
 [metadata]
 python-versions = "^3.6"
 platform = "*"
-content-hash = "1f2e3109a727329844819725c529c28ca0cc0248bc2651d0a93e82f0577970dc"
+content-hash = "3bdc70cdfca4c9ec91aaf3964a4c4edf0424fa543cc10353e15a62263218ad15"
 
 [metadata.hashes]
 atomicwrites = [ "a24da68318b08ac9c9c45029f4a10371ab5b20e4226738e150e6e7c571630ae6", "240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585",]
@@ -131,3 +168,6 @@ pytest = [ "26838b2bc58620e01675485491504c3aa7ee0faf335c37fcd5f8731ca4319591", "
 pytest-cov = [ "890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec", "03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d",]
 six = [ "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb", "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9",]
 sqlalchemy = [ "2d5f08f714a886a1382c18be501e614bce50d362384dc089474019ce0768151c",]
+transaction = [ "9de0f93f833713270fbceaf6092194313c1de0afb660e66dea8e089855eb281c", "269601a3493cd3eddeb869419ceadfc5e6d2bc931e9970d11fc4649dab189c3c", "f2242070e437e5d555ea3df809cb517860513254c828f33847df1c5e4b776c7a",]
+"zope.interface" = [ "467d364b24cb398f76ad5e90398d71b9325eb4232be9e8a50d6a3b3c7a1c8789", "3d184aff0756c44fff7de69eb4cd5b5311b6f452d4de28cb08343b3f21993763", "21506674d30c009271fe68a242d330c83b1b9d76d62d03d87e1e9528c61beea6", "f41037260deaacb875db250021fe883bf536bf6414a4fd25b25059b02e31b120", "9ada83f4384bbb12dedc152bcdd46a3ac9f5f7720d43ac3ce3e8e8b91d733c10", "e881ef610ff48aece2f4ee2af03d2db1a146dc7c705561bd6089b2356f61641f", "e6b77ae84f2b8502d99a7855fa33334a1eb6159de45626905cb3e454c023f339", "a1daf9c5120f3cc6f2b5fef8e1d2a3fb7bbbb20ed4bfdc25bc8364bc62dcf54b", "57c38470d9f57e37afb460c399eb254e7193ac7fb8042bd09bdc001981a9c74c",]
+"zope.sqlalchemy" = [ "9316a1a8bb9e4f9f59332acf1ad2cc8b664f19a4bde5f68be7f61f3e11f80514",]
