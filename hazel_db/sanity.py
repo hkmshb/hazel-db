@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative.clsregistry import _ModuleMarker
 
 
 import logging
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 def is_schema_intact(BASE, session):
@@ -46,8 +46,8 @@ def is_schema_intact(BASE, session):
 
         if table_name not in tables:
             has_error = True
-            log.error(("Model {} declares table {} which does not exist in "
-                       "database {}").format(cls, table_name, engine))
+            _log.error(("Model {} declares table {} which does not exist in "
+                        "database {}").format(cls, table_name, engine))
 
         # 2. check that all columns declared in model exists
         mapper = inspect(cls)
@@ -62,11 +62,11 @@ def is_schema_intact(BASE, session):
                     columns = [c['name'] for c in iengine.get_columns(table_name)]
                 except sqlalchemy.exc.NoSuchTableError:
                     has_error = True
-                    log.error(("Model {} declares table {} which does not exist "
-                               "in database {}").format(cls, table_name, engine))
+                    _log.error(("Model {} declares table {} which does not exist "
+                                "in database {}").format(cls, table_name, engine))
                     break
 
                 if not column.key in columns:
-                    log.error(("Model {} declares column {} which does not exist "
-                               "in database {}").format(cls, column.key, engine))
+                    _log.error(("Model {} declares column {} which does not exist "
+                                "in database {}").format(cls, column.key, engine))
     return not has_error

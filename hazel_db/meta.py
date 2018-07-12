@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import MetaData
 
 import logging
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 __all__ = [
@@ -137,5 +137,5 @@ def attach_module_models(module, BASE):
                     attach_model(value, BASE)
                 except Exception:
                     msg = "Attaching '{}' to SQLAlchemy declarative BASE failed"
-                    log.debug(msg.format(value))
+                    _log.debug(msg.format(value))
                     raise
