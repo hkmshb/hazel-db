@@ -68,7 +68,7 @@ def get_engine(settings, prefix='sqlalchemy.'):
 
     if 'sqlite' in sqla_url:
         return _get_sqlite_engine(settings, prefix)
-    elif 'postgres' in sqla_url:
+    if 'postgres' in sqla_url:
         return _get_postgres_engine(settings, prefix)
 
     errmsg = "Unknown SQLAlchemy connection URL: {}"
