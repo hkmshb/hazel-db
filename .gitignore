@@ -1,13 +1,25 @@
+# byte-compiled
 __pycache__/
+*$py.class
+*.py[cdo]
+
+# packaging
 *.egg-info/
 build/
+sdist/
 dist/
 venv/
+*.egg
 
+# test / coverage
 .pytest_cache/
-.vscode/
+.coverage.*
+.coverage
 .cache/
+.tox
+
+# misc
+.vscode/
 .tmp/
 
-.coverage
 *.log

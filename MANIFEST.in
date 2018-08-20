@@ -1,5 +1,5 @@
 graft src
-graft test
+graft tests
 
 include *.md *.ini
 
