@@ -23,22 +23,21 @@ class UUID(TypeDecorator):
     def process_bind_param(self, value, dialect):
         if value is None:
             return value
-        elif dialect.name == 'postgresql':
+        if dialect.name == 'postgresql':
             return str(value)
-        else:
-            if not isinstance(value, uuid.UUID):
-                return '{:32x}'.format(uuid.UUID(value).int)
-            else:
-                # hexstring
-                return '{:32x}'.format(value.int)
+        if not isinstance(value, uuid.UUID):
+            return '{:32x}'.format(uuid.UUID(value).int)
+        # hexstring
+        return '{:32x}'.format(value.int)
 
     def process_result_value(self, value, dialect):
+        # pylint: disable=unused-argument
         if value is None:
             return value
         return uuid.UUID(value)
 
 
-class Choice(TypeDecorator):
+class Choice(TypeDecorator):    # pylint: disable=W0223
     """Choice offers way of having fixed set of choices for given column. It
     works with :mod:`enum` in the standard library of Python 3.4+ (the enum34_
     backported package on PyPi is compatible too for ``< 3.4``).
@@ -52,11 +51,13 @@ class Choice(TypeDecorator):
         self.enum_class = enum_class
 
     def process_bind_param(self, value, dialect):
+        # pylint: disable=unused-argument
         if value is None:
             return value
         return self.enum_class(value).value
 
     def process_result_value(self, value, dialect):
+        # pylint: disable=unused-argument
         if value is None:
             return value
         return self.enum_class(value)

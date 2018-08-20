@@ -1,12 +1,13 @@
 import inspect
+import logging
 import zope.sqlalchemy
-from sqlalchemy.ext.declarative import declarative_base, instrument_declarative
-from sqlalchemy import create_engine, engine_from_config
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import instrument_declarative as inst_decl
+from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import MetaData
 
-import logging
-_log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 __all__ = [
@@ -31,7 +32,7 @@ NAMING_CONVENTION = {
 }
 
 metadata = MetaData(naming_convention=NAMING_CONVENTION)
-BASE  = declarative_base(metadata=metadata)
+BASE = declarative_base(metadata=metadata)
 Model = BASE   # Alias
 
 
@@ -82,7 +83,7 @@ def create_session_factory(engine):
     return factory
 
 
-def create_session(factory, tm=None, retry_count=3):
+def create_session(factory, tm=None, retry_count=3):    # pylint: disable=C0103
     '''Creates and returns a new SQLAlchemy database session which is overseen
     by the provided transaction manager.
 
@@ -109,15 +110,16 @@ def attach_model(model_class, BASE, ignore_reattach=True):
 
     :credit: websauna :: //github.com/websauna/
     '''
+    # pylint: disable=protected-access
     if ignore_reattach:
         if '_decl_class_registry' in model_class.__dict__:
             assert model_class._decl_class_registry == BASE._decl_class_registry, (
                 "Tried to attach to a different SQLAlchemy declarative BASE")
             return
-    instrument_declarative(model_class, BASE._decl_class_registry, BASE.metadata)
+    inst_decl(model_class, BASE._decl_class_registry, BASE.metadata)
 
 
-def attach_module_models(module, BASE):
+def attach_module_models(module, BASE):     # pylint: disable=C0103,W0621
     '''Attaches all models in a python module to SQLAlchemy declarative BASE.
     The attachable models must declare ``__tablename__`` property and must not
     have existing ``Base`` class in their inheritance.
@@ -136,6 +138,6 @@ def attach_module_models(module, BASE):
                 try:
                     attach_model(value, BASE)
                 except Exception:
-                    msg = "Attaching '{}' to SQLAlchemy declarative BASE failed"
-                    _log.debug(msg.format(value))
+                    msg = "Attaching '%s' to SQLAlchemy declarative BASE failed"
+                    _log.debug(msg, value)
                     raise

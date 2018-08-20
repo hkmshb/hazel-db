@@ -1,11 +1,11 @@
+import logging
 import sqlalchemy
 from sqlalchemy import inspect
-from sqlalchemy.orm import RelationshipProperty, Session
+from sqlalchemy.orm import RelationshipProperty
 from sqlalchemy.ext.declarative.clsregistry import _ModuleMarker
 
 
-import logging
-_log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)      # pylint: disable=C0103
 
 
 def is_schema_intact(BASE, session):
@@ -29,6 +29,7 @@ def is_schema_intact(BASE, session):
     has_error = False
     tables = iengine.get_table_names()
 
+    # pylint: disable=protected-access
     for name, cls in BASE._decl_class_registry.items():
         if isinstance(cls, _ModuleMarker):
             continue    # not a model
@@ -46,8 +47,8 @@ def is_schema_intact(BASE, session):
 
         if table_name not in tables:
             has_error = True
-            _log.error(("Model {} declares table {} which does not exist in "
-                        "database {}").format(cls, table_name, engine))
+            _log.error(("Model %s declares table %s which does not exist in "
+                        "database %s"), cls, table_name, engine)
 
         # 2. check that all columns declared in model exists
         mapper = inspect(cls)
@@ -62,11 +63,11 @@ def is_schema_intact(BASE, session):
                     columns = [c['name'] for c in iengine.get_columns(table_name)]
                 except sqlalchemy.exc.NoSuchTableError:
                     has_error = True
-                    _log.error(("Model {} declares table {} which does not exist "
-                                "in database {}").format(cls, table_name, engine))
+                    _log.error(("Model %s declares table %s which does not exist "
+                                "in database %s"), cls, table_name, engine)
                     break
 
                 if not column.key in columns:
-                    _log.error(("Model {} declares column {} which does not exist "
-                                "in database {}").format(cls, column.key, engine))
+                    _log.error(("Model %s declares column %s which does not exist "
+                                "in database %s"), cls, column.key, engine)
     return not has_error

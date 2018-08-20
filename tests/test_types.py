@@ -35,7 +35,6 @@ class TestUUIDType:
         found = db.query(DummyEntity).one()
         assert found and isinstance(found.uuid, uuid.UUID)
 
-
     def test_can_persist_and_read_UUID_string(self, db):
         get_count = lambda : db.query(DummyEntity).count()
         assert get_count() == 0
