@@ -1,0 +1,10 @@
+graft src
+graft test
+
+include *.md *.ini
+
+include .pylintrc
+include .coveragerc
+include pyproject.*
+
+recursive-exclude * __pycache__ *.py[co]
