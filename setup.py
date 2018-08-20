@@ -20,8 +20,8 @@ tests_require = [
 
 
 setup(
-    name='hazel_db',
-    version='0.1.dev0',
+    name='hazel-db',
+    version='0.1',
     description='A library which eases integrating SQLAlchemy into a project',
     long_description='\n\n'.join([
         readfile('CHANGES.md'),
