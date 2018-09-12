@@ -6,7 +6,7 @@ pipeline:
       - python -m venv /opt/${DRONE_REPO_NAME}
       - source /opt/${DRONE_REPO_NAME}/bin/activate
       - cd /drone/src/${DRONE_REPO_LINK:7}
-      - pip install .
+      - pip install ".[testing]"
       - py.test
     when:
       branch: test/master
