@@ -1,0 +1,13 @@
+pipeline:
+  hazel-db:
+    image: python:3.6.6-alpine3.8
+    commands:
+      - apk add bash
+      - python -m venv /opt/${DRONE_REPO_NAME}
+      - source /opt/${DRONE_REPO_NAME}/bin/activate
+      - cd /drone/src/${DRONE_REPO_LINK:7}
+      - pip install .
+      - py.test
+    when:
+      branch: test/master
+
