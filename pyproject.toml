@@ -8,10 +8,10 @@ license = "BSD-2-Clause"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.7"
 sqlalchemy = "^1.2"
-"zope.sqlalchemy" = "^1.0"
+"zope.sqlalchemy" = "^1.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^3.6"
-pytest-cov = "^2.5"
+pytest = "^3.10"
+pytest-cov = "^2.6"
