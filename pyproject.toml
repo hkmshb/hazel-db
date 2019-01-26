@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hazel-db"
-version = "0.1.1"
+version = "0.1.2"
 description = "A library which eases integrating SQLAlchemy into a project"
 authors = ["Abdul-Hakeem Shaibu <hkmshb@gmail.com>"]
 keywords = ["hazel", "sqlalchemy", "database", "db"]
@@ -8,10 +8,39 @@ license = "BSD-2-Clause"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.7"
 sqlalchemy = "^1.2"
-"zope.sqlalchemy" = "^1.0"
+"zope.sqlalchemy" = "^1.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^3.6"
-pytest-cov = "^2.5"
+pytest = "^3.10"
+pytest-cov = "^2.6"
+tox = "^3.7"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+skipsdist = true
+envlist = lint, py37
+
+[testenv]
+passenv=HOME USER
+whitelist_externals =
+    bash
+    poetry
+skip_install = true
+commands =
+    poetry install -v
+    poetry run py.test --cov-report term-missing --cov=hazel_db tests
+
+[testenv:lint]
+whitelist_externals =
+    bash
+    poetry
+skip_install = true
+deps =
+    pylint
+commands =
+    poetry install -v
+    pylint --rcfile={toxinidir}/.pylintrc {toxinidir}/src/hazel_db
+"""

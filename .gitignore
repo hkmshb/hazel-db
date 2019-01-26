@@ -1,4 +1,5 @@
 # byte-compiled
+pip-wheel-metadata/
 __pycache__/
 *$py.class
 *.py[cdo]
