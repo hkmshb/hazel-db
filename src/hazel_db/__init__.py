@@ -2,8 +2,8 @@ import uuid
 from sqlalchemy.sql import func
 from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.types import TypeDecorator, CHAR, Integer
 from sqlalchemy.dialects.postgresql import UUID as pgUUID
+from sqlalchemy.types import TypeDecorator, CHAR, Integer, Unicode
 from .meta import BASE, Model, metadata, get_engine
 
 
@@ -68,12 +68,13 @@ class Choice(TypeDecorator):  # pylint: disable=W0223
 
 
 class UUIDMixin:
-    """Defines a UUID backed primary key field for uniquely identifing records.
+    """Defines a UUID-string backed primary key field for uniquely identifing
+    records.
     """
 
     @declared_attr
     def id(cls):
-        return Column(UUID, primary_key=True, default=str(uuid.uuid4()))
+        return Column(Unicode, primary_key=True, default=str(uuid.uuid4()))
 
 
 class TimestampMixin:

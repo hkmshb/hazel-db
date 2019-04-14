@@ -82,6 +82,10 @@ class EntityDef(BlankEntityDef):
     __tablename__ = 'test_entitydef'
 
 
+class Entity(UUIDMixin, BASE):
+    __tablename__ = 'entity'
+
+
 class TestLooseModelsWithSQLA:
     def test_fails_for_model_not_registered_with_BASE(self, db):
         with pytest.raises(orm.exc.UnmappedInstanceError):
@@ -102,3 +106,32 @@ class TestLooseModelsWithSQLA:
         dbsession.add(EntityDef())
         dbsession.commit()
         assert dbsession.query(EntityDef).count() == 1
+
+
+class TestUUIDMixinFieldType:
+    def test_UUIDMixin_stores_UUID_string_in_primary_key_field(self, db):
+        query = db.query(Entity)
+        assert query.count() == 0
+
+        entity = Entity()
+        assert entity.id is None
+
+        db.add(entity)
+        db.flush()
+
+        assert entity.id is not None
+        assert type(entity.id) is str
+        assert uuid.UUID(entity.id) is not None
+
+    def test_UUIDMixin_primary_field_enforces_uniqueness(self, db):
+        query = db.query(Entity)
+        assert query.count() == 0
+
+        entity = Entity()
+        db.add(entity)
+        db.flush()
+
+        with pytest.raises(orm.exc.FlushError):
+            duplicate = Entity(id=entity.id)
+            db.add(duplicate)
+            db.flush()
