@@ -1,14 +1,14 @@
 import pytest
 import enum, uuid
+from sqlalchemy import exc, orm
 from sqlalchemy import Column, Integer
-from hazel_db import BASE, types
+from hazel_db import BASE, Choice, UUID, UUIDMixin, meta
 
 
 class DummyEntity(BASE):
     __tablename__ = 'test_entity'
     id = Column(Integer, autoincrement=True, primary_key=True)
-    uuid = Column(types.UUID, default=uuid.uuid4)
-
+    uuid = Column(UUID, default=uuid.uuid4)
 
 
 class Gender(enum.Enum):
@@ -19,11 +19,10 @@ class Gender(enum.Enum):
 class DummyPerson(BASE):
     __tablename__ = 'test_person'
     id = Column(Integer, autoincrement=True, primary_key=True)
-    gender = Column(types.Choice(Gender))
+    gender = Column(Choice(Gender))
 
 
 class TestUUIDType:
-
     def test_can_persist_and_read_UUID(self, db):
         get_count = lambda : db.query(DummyEntity).count()
         assert get_count() == 0
@@ -49,7 +48,6 @@ class TestUUIDType:
 
 
 class TestChoiceType:
-
     def test_can_persist_and_read_ENUM(self, db):
         get_count = lambda : db.query(DummyPerson).count()
         assert get_count() == 0
@@ -73,3 +71,34 @@ class TestChoiceType:
         found = db.query(DummyPerson).one()
         assert found and isinstance(found.gender, Gender)
         assert found.gender == Gender.FEMALE
+
+
+# define loose models
+class BlankEntityDef(UUIDMixin):
+    pass
+
+
+class EntityDef(BlankEntityDef):
+    __tablename__ = 'test_entitydef'
+
+
+class TestLooseModelsWithSQLA:
+    def test_fails_for_model_not_registered_with_BASE(self, db):
+        with pytest.raises(orm.exc.UnmappedInstanceError):
+            db.add(BlankEntityDef())
+            db.commit()
+
+    def test_model_attach_fails_if__tablename__missing(self):
+        with pytest.raises(exc.InvalidRequestError):
+            meta.attach_model(BlankEntityDef, meta.BASE)
+
+    def test_model_attach_works_if__tablename__present(self):
+        # model needs to be attached before creating session
+        meta.attach_model(EntityDef, meta.BASE)
+
+        from .conftest import get_session
+        
+        dbsession = get_session()
+        dbsession.add(EntityDef())
+        dbsession.commit()
+        assert dbsession.query(EntityDef).count() == 1

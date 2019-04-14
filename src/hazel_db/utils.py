@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative.clsregistry import _ModuleMarker
 _log = logging.getLogger(__name__)      # pylint: disable=C0103
 
 
-def is_schema_intact(BASE, session):
+def sanity_check(BASE, session):
     '''Checks whether the current database matches the models declared in the
     model base.
 

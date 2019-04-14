@@ -1,6 +1,6 @@
 import pytest
 from sqlalchemy import Column, Integer, String
-from hazel_db import meta, sanity
+from hazel_db import meta, utils
 
 
 
@@ -23,7 +23,7 @@ class Comments(BASE):
 def test_sanity_check_fails_for_schemaless_db():
     engine = meta.get_engine({'sqla.url':'sqlite:///:memory:'}, prefix='sqla.')
     session = meta.create_session_factory(engine)() 
-    assert sanity.is_schema_intact(BASE, session) == False
+    assert utils.sanity_check(BASE, session) == False
 
 
 def test_sanity_check_passes_for_db_with_all_schema_objects():
@@ -32,4 +32,4 @@ def test_sanity_check_passes_for_db_with_all_schema_objects():
     metadata.create_all(engine)
 
     session = meta.create_session_factory(engine)()
-    assert sanity.is_schema_intact(BASE, session) == True
+    assert utils.sanity_check(BASE, session) == True
