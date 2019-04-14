@@ -24,7 +24,7 @@ class DummyPerson(BASE):
 
 class TestUUIDType:
     def test_can_persist_and_read_UUID(self, db):
-        get_count = lambda : db.query(DummyEntity).count()
+        get_count = lambda: db.query(DummyEntity).count()
         assert get_count() == 0
 
         db.add(DummyEntity(uuid=uuid.uuid4()))
@@ -35,7 +35,7 @@ class TestUUIDType:
         assert found and isinstance(found.uuid, uuid.UUID)
 
     def test_can_persist_and_read_UUID_string(self, db):
-        get_count = lambda : db.query(DummyEntity).count()
+        get_count = lambda: db.query(DummyEntity).count()
         assert get_count() == 0
 
         uuid_str = str(uuid.uuid4())
@@ -49,7 +49,7 @@ class TestUUIDType:
 
 class TestChoiceType:
     def test_can_persist_and_read_ENUM(self, db):
-        get_count = lambda : db.query(DummyPerson).count()
+        get_count = lambda: db.query(DummyPerson).count()
         assert get_count() == 0
 
         db.add(DummyPerson(gender=Gender.MALE))
@@ -61,7 +61,7 @@ class TestChoiceType:
         assert found.gender == Gender.MALE
 
     def test_can_persist_and_read_ENUM_IntValue(self, db):
-        get_count = lambda : db.query(DummyPerson).count()
+        get_count = lambda: db.query(DummyPerson).count()
         assert get_count() == 0
 
         db.add(DummyPerson(gender=Gender.FEMALE.value))
@@ -97,7 +97,7 @@ class TestLooseModelsWithSQLA:
         meta.attach_model(EntityDef, meta.BASE)
 
         from .conftest import get_session
-        
+
         dbsession = get_session()
         dbsession.add(EntityDef())
         dbsession.commit()

@@ -15,6 +15,7 @@ class UUID(TypeDecorator):
 
     :credit: adapted from sqlalchemy docs on 'Backend-agnostic GUID Type'
     """
+
     impl = CHAR
 
     def load_dialet_impl(self, dialect):
@@ -39,13 +40,14 @@ class UUID(TypeDecorator):
         return uuid.UUID(value)
 
 
-class Choice(TypeDecorator):    # pylint: disable=W0223
+class Choice(TypeDecorator):  # pylint: disable=W0223
     """Choice offers way of having fixed set of choices for given column. It
     works with :mod:`enum` in the standard library of Python 3.4+ (the enum34_
     backported package on PyPi is compatible too for ``< 3.4``).
 
     :credit: adapted from sqlalchemy_utils ChoiceType.
     """
+
     impl = Integer
 
     def __init__(self, enum_class, *args, **kwargs):
@@ -68,6 +70,7 @@ class Choice(TypeDecorator):    # pylint: disable=W0223
 class UUIDMixin:
     """Defines a UUID backed primary key field for uniquely identifing records.
     """
+
     @declared_attr
     def id(cls):
         return Column(UUID, primary_key=True, default=str(uuid.uuid4()))
@@ -76,6 +79,7 @@ class UUIDMixin:
 class TimestampMixin:
     """Defines fields to record timestamp for record creation and modification.
     """
+
     created_at = Column(DateTime, nullable=False, default=func.now())
     updated_at = Column(DateTime, nullable=True, onupdate=func.now())
 
@@ -84,4 +88,5 @@ class DomainModel(TimestampMixin, Model):
     """Abstract base model class for defining domain models providing a UUID
     backed primary key field and timestamp fields.
     """
+
     __abstract__ = True

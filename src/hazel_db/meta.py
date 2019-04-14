@@ -28,12 +28,12 @@ NAMING_CONVENTION = {
     "uq": "uq_%(table_name)s_%(column_0_name)s",
     "ck": "ck_%(table_name)s_%(constraint_name)s",
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-    "pk": "pk_%(table_name)s"
+    "pk": "pk_%(table_name)s",
 }
 
 metadata = MetaData(naming_convention=NAMING_CONVENTION)
 BASE = declarative_base(metadata=metadata)
-Model = BASE   # Alias
+Model = BASE  # Alias
 
 
 def _get_sqlite_engine(settings, prefix):
@@ -50,7 +50,7 @@ def _get_postgres_engine(settings, prefix):
     options = {
         'client_encoding': 'utf-8',
         'isolation_level': 'SERIALIZABLE',
-        'content_args': {'options': '-c timezone=utc'}
+        'content_args': {'options': '-c timezone=utc'},
     }
     engine = engine_from_config(settings, prefix, **options)
     return engine
@@ -83,7 +83,7 @@ def create_session_factory(engine):
     return factory
 
 
-def create_session(factory, tm=None, retry_count=3):    # pylint: disable=C0103
+def create_session(factory, tm=None, retry_count=3):  # pylint: disable=C0103
     '''Creates and returns a new SQLAlchemy database session which is overseen
     by the provided transaction manager.
 
@@ -113,13 +113,14 @@ def attach_model(model_class, BASE, ignore_reattach=True):
     # pylint: disable=protected-access
     if ignore_reattach:
         if '_decl_class_registry' in model_class.__dict__:
-            assert model_class._decl_class_registry == BASE._decl_class_registry, (
-                "Tried to attach to a different SQLAlchemy declarative BASE")
+            assert (
+                model_class._decl_class_registry == BASE._decl_class_registry
+            ), "Tried to attach to a different SQLAlchemy declarative BASE"
             return
     inst_decl(model_class, BASE._decl_class_registry, BASE.metadata)
 
 
-def attach_module_models(module, BASE):     # pylint: disable=C0103,W0621
+def attach_module_models(module, BASE):  # pylint: disable=C0103,W0621
     '''Attaches all models in a python module to SQLAlchemy declarative BASE.
     The attachable models must declare ``__tablename__`` property and must not
     have existing ``Base`` class in their inheritance.
@@ -138,6 +139,8 @@ def attach_module_models(module, BASE):     # pylint: disable=C0103,W0621
                 try:
                     attach_model(value, BASE)
                 except Exception:
-                    msg = "Attaching '%s' to SQLAlchemy declarative BASE failed"
+                    msg = (
+                        "Attaching '%s' to SQLAlchemy declarative BASE failed"
+                    )
                     _log.debug(msg, value)
                     raise

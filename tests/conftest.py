@@ -3,9 +3,7 @@ from hazel_db import meta
 
 
 def get_memory_engine():
-    return meta.get_engine(
-        {"sqla.url": "sqlite:///:memory:"}, prefix="sqla."
-    )
+    return meta.get_engine({"sqla.url": "sqlite:///:memory:"}, prefix="sqla.")
 
 
 def get_session(engine=None):
