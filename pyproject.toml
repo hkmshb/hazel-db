@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hazel-db"
-version = "0.2.1"
+version = "0.2.2"
 description = "A library which eases integrating SQLAlchemy into a project"
 authors = ["Abdul-Hakeem Shaibu <hkmshb@gmail.com>"]
 keywords = ["hazel", "sqlalchemy", "database", "db"]
