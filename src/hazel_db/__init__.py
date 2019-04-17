@@ -74,7 +74,7 @@ class UUIDMixin:
 
     @declared_attr
     def id(cls):
-        return Column(Unicode, primary_key=True, default=str(uuid.uuid4()))
+        return Column(Unicode, primary_key=True, default=lambda: str(uuid.uuid4()))
 
 
 class TimestampMixin:

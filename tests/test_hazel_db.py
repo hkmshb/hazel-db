@@ -135,3 +135,16 @@ class TestUUIDMixinFieldType:
             duplicate = Entity(id=entity.id)
             db.add(duplicate)
             db.flush()
+
+    def test_UUIDMixin_primary_field_generate_unique_ids(self, db):
+        counter = db.query(Entity).count
+        assert counter() == 0
+
+        entity1 = Entity()
+        entity2 = Entity()
+
+        db.add_all([entity1, entity2])
+        db.flush()
+
+        assert counter() == 2
+        assert entity1.id != entity2.id
